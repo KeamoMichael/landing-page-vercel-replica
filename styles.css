@@ -131,6 +131,8 @@ body[data-theme="dark"] .nav-logo svg {
     padding: 8px 12px;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 1;
 }
 
 .nav-search .search-box:focus-within {
@@ -147,6 +149,9 @@ body[data-theme="dark"] .nav-logo svg {
     color: var(--black);
     background: transparent;
     font-family: 'Inter', sans-serif;
+    pointer-events: auto;
+    z-index: 2;
+    position: relative;
 }
 
 .nav-search .domain-input::placeholder {
@@ -443,15 +448,30 @@ body[data-theme="dark"] .nav-logo svg {
     padding: 40px 24px 80px;
 }
 
+.top-results-section {
+    margin-bottom: 48px;
+}
+
+.all-results-section {
+    margin-top: 48px;
+}
+
 .results-header {
     margin-bottom: 24px;
 }
 
-.results-title {
+.section-title {
     font-size: 24px;
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--black);
+    margin-bottom: 24px;
+}
+
+.top-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
 }
 
 .results-grid {

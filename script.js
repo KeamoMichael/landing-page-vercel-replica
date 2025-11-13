@@ -48,7 +48,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Common TLDs to search
-    const commonTLDs = ['.com', '.co', '.io', '.net', '.org', '.dev', '.app', '.xyz', '.tech', '.ai', '.me', '.tv', '.online', '.store', '.shop'];
+    const commonTLDs = ['.com', '.co', '.io', '.net', '.org', '.dev', '.app', '.xyz', '.tech', '.ai', '.me', '.tv', '.online', '.store', '.shop', '.space', '.cloud', '.studio', '.sh', '.academy', '.agency', '.bike', '.bio', '.builders', '.careers', '.chat', '.accountants', '.actor', '.airforce', '.apartments', '.archi', '.army', '.associates', '.attorney', '.auction', '.band', '.bargains', '.bet', '.bingo', '.black', '.blue', '.boutique', '.broker', '.business', '.cab', '.cafe', '.camera', '.camp', '.capital', '.cards', '.care', '.cash', '.casino', '.catering', '.center', '.cheap'];
+    
+    // Top TLDs for "Top Results" section
+    const topTLDs = ['.com', '.dev', '.app', '.io'];
     
     // Mock pricing data (in a real app, this would come from an API)
     const tldPrices = {
@@ -119,9 +122,67 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // Function to create domain card
+    function createDomainCard(result) {
+        const card = document.createElement('div');
+        card.className = `domain-result-card ${result.available ? 'available' : 'unavailable'}`;
+        
+        if (result.available) {
+            card.innerHTML = `
+                <div class="domain-info">
+                    <span class="domain-name">${result.domain}</span>
+                </div>
+                <div class="domain-actions">
+                    <div class="domain-price">$${result.price.toFixed(2)}</div>
+                    <button class="add-domain-btn" data-domain="${result.domain}" data-price="${result.price}">
+                        <svg class="cart-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4H12L11 10H5L4 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 13C6.55228 13 7 12.5523 7 12C7 11.4477 6.55228 11 6 11C5.44772 11 5 11.4477 5 12C5 12.5523 5.44772 13 6 13Z" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M10 13C10.5523 13 11 12.5523 11 12C11 11.4477 10.5523 11 10 11C9.44772 11 9 11.4477 9 12C9 12.5523 9.44772 13 10 13Z" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                        <svg class="plus-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 2V10M2 6H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <span class="add-text">Add</span>
+                    </button>
+                </div>
+            `;
+        } else {
+            card.innerHTML = `
+                <div class="domain-info">
+                    <span class="domain-name">${result.domain}</span>
+                    <span class="domain-status">Unavailable</span>
+                </div>
+                <div class="domain-price">—</div>
+            `;
+        }
+        
+        // Add click handler for add button
+        if (result.available) {
+            const addBtn = card.querySelector('.add-domain-btn');
+            if (addBtn) {
+                addBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const domain = this.getAttribute('data-domain');
+                    const price = parseFloat(this.getAttribute('data-price'));
+                    addDomainToCart(domain, price);
+                    
+                    // Visual feedback
+                    this.classList.add('added');
+                    setTimeout(() => {
+                        this.classList.remove('added');
+                    }, 1000);
+                });
+            }
+        }
+        
+        return card;
+    }
+    
     // Function to search domains
     function searchDomains(query) {
-        if (!searchResultsSection || !resultsGrid) {
+        const topResultsGrid = document.getElementById('top-results-grid');
+        if (!searchResultsSection || !resultsGrid || !topResultsGrid) {
             console.error('Search results elements not found');
             return;
         }
@@ -132,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // Remove any existing TLD from the query
-        const cleanQuery = query.replace(/\.(com|co|io|net|org|dev|app|xyz|tech|ai|me|tv|online|store|shop)$/i, '').trim();
+        const cleanQuery = query.replace(/\.(com|co|io|net|org|dev|app|xyz|tech|ai|me|tv|online|store|shop|space|cloud|studio|sh|academy|agency|bike|bio|builders|careers|chat|accountants|actor|airforce|apartments|archi|army|associates|attorney|auction|band|bargains|bet|bingo|black|blue|boutique|broker|business|cab|cafe|camera|camp|capital|cards|care|cash|casino|catering|center|cheap)$/i, '').trim();
         
         if (cleanQuery === '') {
             exitSearchMode();
@@ -142,15 +203,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Enter search mode
         enterSearchMode();
         
-        // Clear and populate results
+        // Clear results
+        topResultsGrid.innerHTML = '';
         resultsGrid.innerHTML = '';
         
         // Search for each TLD
-        const results = [];
+        const allResults = [];
         commonTLDs.forEach(tld => {
             const isAvailable = checkDomainAvailability(cleanQuery, tld);
             const price = tldPrices[tld] || 9.99;
-            results.push({
+            allResults.push({
                 domain: cleanQuery + tld,
                 tld: tld,
                 available: isAvailable,
@@ -158,60 +220,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // Render results
-        results.forEach(result => {
-            const card = document.createElement('div');
-            card.className = `domain-result-card ${result.available ? 'available' : 'unavailable'}`;
-            
-            if (result.available) {
-                card.innerHTML = `
-                    <div class="domain-info">
-                        <span class="domain-name">${result.domain}</span>
-                    </div>
-                    <div class="domain-actions">
-                        <div class="domain-price">$${result.price.toFixed(2)}/year</div>
-                        <button class="add-domain-btn" data-domain="${result.domain}" data-price="${result.price}">
-                            <svg class="cart-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 4H12L11 10H5L4 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M6 13C6.55228 13 7 12.5523 7 12C7 11.4477 6.55228 11 6 11C5.44772 11 5 11.4477 5 12C5 12.5523 5.44772 13 6 13Z" stroke="currentColor" stroke-width="1.5"/>
-                                <path d="M10 13C10.5523 13 11 12.5523 11 12C11 11.4477 10.5523 11 10 11C9.44772 11 9 11.4477 9 12C9 12.5523 9.44772 13 10 13Z" stroke="currentColor" stroke-width="1.5"/>
-                            </svg>
-                            <svg class="plus-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 2V10M2 6H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                            </svg>
-                            <span class="add-text">Add</span>
-                        </button>
-                    </div>
-                `;
+        // Separate top results and all results
+        const topResults = [];
+        const otherResults = [];
+        
+        allResults.forEach(result => {
+            if (topTLDs.includes(result.tld)) {
+                topResults.push(result);
             } else {
-                card.innerHTML = `
-                    <div class="domain-info">
-                        <span class="domain-name">${result.domain}</span>
-                        <span class="domain-status">Unavailable</span>
-                    </div>
-                    <div class="domain-price">—</div>
-                `;
+                otherResults.push(result);
             }
-            
-            // Add click handler for add button
-            if (result.available) {
-                const addBtn = card.querySelector('.add-domain-btn');
-                if (addBtn) {
-                    addBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const domain = this.getAttribute('data-domain');
-                        const price = parseFloat(this.getAttribute('data-price'));
-                        addDomainToCart(domain, price);
-                        
-                        // Visual feedback
-                        this.classList.add('added');
-                        setTimeout(() => {
-                            this.classList.remove('added');
-                        }, 1000);
-                    });
-                }
-            }
-            
+        });
+        
+        // Render top results
+        topResults.forEach(result => {
+            const card = createDomainCard(result);
+            topResultsGrid.appendChild(card);
+        });
+        
+        // Render all other results
+        otherResults.forEach(result => {
+            const card = createDomainCard(result);
             resultsGrid.appendChild(card);
         });
     }
