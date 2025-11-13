@@ -465,6 +465,11 @@ body[data-theme="dark"] .nav-logo svg {
     opacity: 1;
     width: 16px;
     height: 16px;
+    color: var(--black);
+}
+
+.add-domain-btn .add-text {
+    color: var(--black);
 }
 
 .add-domain-btn .plus-icon {
@@ -495,19 +500,18 @@ body[data-theme="dark"] .nav-logo svg {
 }
 
 .add-domain-btn:hover {
-    background: var(--white);
+    background: var(--white) !important;
     border-color: var(--gray-400);
     min-width: 80px;
     width: auto;
     padding: 8px 12px;
-    color: var(--black);
 }
 
 .add-domain-btn:hover .cart-icon {
     left: 12px;
     transform: translateY(-50%);
     opacity: 1;
-    color: var(--black);
+    color: var(--black) !important;
 }
 
 .add-domain-btn:hover .plus-icon {
@@ -515,15 +519,11 @@ body[data-theme="dark"] .nav-logo svg {
     transform: translate(-50%, -50%) scale(0);
 }
 
-.add-domain-btn:hover .plus-icon path {
-    stroke: var(--black);
-}
-
 .add-domain-btn:hover .add-text {
     opacity: 1;
     width: auto;
     margin-left: 8px;
-    color: var(--black);
+    color: var(--black) !important;
 }
 
 .add-domain-btn:active {
