@@ -477,7 +477,7 @@ body[data-theme="dark"] .nav-logo svg {
 .results-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 16px;
+    gap: 12px;
 }
 
 .domain-result-card {
@@ -491,6 +491,10 @@ body[data-theme="dark"] .nav-logo svg {
     align-items: center;
     gap: 16px;
     min-width: 0;
+}
+
+.top-results-grid .domain-result-card {
+    padding: 20px 24px;
 }
 
 .domain-result-card:hover {
