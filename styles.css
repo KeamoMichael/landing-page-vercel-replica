@@ -75,14 +75,50 @@ body[data-theme="dark"] .nav-logo svg {
     color: #ffffff;
 }
 
-.nav-search {
-    flex: 1;
+.nav-links {
     display: flex;
+    align-items: center;
+    gap: 24px;
+    flex: 1;
+    justify-content: center;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.nav-link {
+    color: var(--black);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    transition: opacity 0.2s ease;
+    position: relative;
+}
+
+.nav-link:hover {
+    opacity: 0.6;
+}
+
+.navbar.search-mode .nav-links {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    flex: 0;
+    overflow: hidden;
+}
+
+.nav-search {
+    display: none;
+    flex: 1;
     align-items: center;
     justify-content: center;
     max-width: 600px;
     margin: 0 auto;
     padding: 0 24px;
+    transition: all 0.3s ease;
+}
+
+.navbar.search-mode .nav-search {
+    display: flex;
 }
 
 .nav-search .search-box {

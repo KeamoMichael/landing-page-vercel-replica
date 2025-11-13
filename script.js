@@ -64,7 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to enter search mode
     function enterSearchMode() {
+        const navbar = document.querySelector('.navbar');
         const mainContent = document.querySelector('.main-content');
+        if (navbar) {
+            navbar.classList.add('search-mode');
+        }
         if (mainContent) {
             mainContent.classList.add('search-mode');
         }
@@ -75,7 +79,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to exit search mode
     function exitSearchMode() {
+        const navbar = document.querySelector('.navbar');
         const mainContent = document.querySelector('.main-content');
+        if (navbar) {
+            navbar.classList.remove('search-mode');
+        }
         if (mainContent) {
             mainContent.classList.remove('search-mode');
         }
