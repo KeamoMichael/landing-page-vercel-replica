@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 void char.offsetWidth;
                 
                 // Set initial state (bottom, blurred) - use inline styles temporarily
-                char.style.transform = 'translateY(20px) translateX(0)';
+                char.style.transform = 'translateY(20px)';
                 char.style.filter = 'blur(8px)';
                 char.style.opacity = '0';
                 char.style.verticalAlign = 'baseline';
