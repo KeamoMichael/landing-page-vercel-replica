@@ -26,22 +26,157 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Domain search functionality
-    const domainInput = document.querySelector('.domain-input');
-    const searchButton = document.querySelector('.search-button');
+    const domainInput = document.getElementById('domain-input');
+    const searchButton = document.getElementById('search-button');
+    const searchResultsSection = document.getElementById('search-results-section');
+    const resultsGrid = document.getElementById('results-grid');
     
+    // Common TLDs to search
+    const commonTLDs = ['.com', '.co', '.io', '.net', '.org', '.dev', '.app', '.xyz', '.tech', '.ai', '.me', '.tv', '.online', '.store', '.shop'];
+    
+    // Mock pricing data (in a real app, this would come from an API)
+    const tldPrices = {
+        '.com': 12.99,
+        '.co': 24.99,
+        '.io': 49.99,
+        '.net': 14.99,
+        '.org': 12.99,
+        '.dev': 19.99,
+        '.app': 19.99,
+        '.xyz': 1.99,
+        '.tech': 29.99,
+        '.ai': 79.99,
+        '.me': 19.99,
+        '.tv': 29.99,
+        '.online': 9.99,
+        '.store': 49.99,
+        '.shop': 29.99
+    };
+    
+    // Function to check if domain is available (mock function)
+    function checkDomainAvailability(domain, tld) {
+        const fullDomain = domain + tld;
+        // Mock availability - in real app, this would be an API call
+        // For demo purposes, some domains are unavailable
+        const unavailableDomains = ['example.com', 'test.com', 'demo.com', 'god.com', 'god.co'];
+        return !unavailableDomains.includes(fullDomain.toLowerCase());
+    }
+    
+    // Function to search domains
+    function searchDomains(query) {
+        const mainContent = document.querySelector('.main-content');
+        if (!query || query.trim() === '') {
+            searchResultsSection.style.display = 'none';
+            if (mainContent) {
+                mainContent.classList.remove('has-results');
+            }
+            return;
+        }
+        
+        // Remove any existing TLD from the query
+        const cleanQuery = query.replace(/\.(com|co|io|net|org|dev|app|xyz|tech|ai|me|tv|online|store|shop)$/i, '').trim();
+        
+        if (cleanQuery === '') {
+            searchResultsSection.style.display = 'none';
+            return;
+        }
+        
+        // Show results section
+        searchResultsSection.style.display = 'block';
+        resultsGrid.innerHTML = '';
+        
+        // Add class to main content to adjust layout
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            mainContent.classList.add('has-results');
+        }
+        
+        // Scroll to results
+        setTimeout(() => {
+            searchResultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+        
+        // Search for each TLD
+        const results = [];
+        commonTLDs.forEach(tld => {
+            const isAvailable = checkDomainAvailability(cleanQuery, tld);
+            const price = tldPrices[tld] || 9.99;
+            results.push({
+                domain: cleanQuery + tld,
+                tld: tld,
+                available: isAvailable,
+                price: price
+            });
+        });
+        
+        // Render results
+        results.forEach(result => {
+            const card = document.createElement('div');
+            card.className = `domain-result-card ${result.available ? 'available' : 'unavailable'}`;
+            card.innerHTML = `
+                <div>
+                    <span class="domain-name">${result.domain}</span>
+                    ${!result.available ? '<span class="domain-status">Unavailable</span>' : ''}
+                </div>
+                <div class="domain-price">${result.available ? `$${result.price.toFixed(2)}/year` : '—'}</div>
+            `;
+            
+            if (result.available) {
+                card.addEventListener('click', function() {
+                    addToCart(result.domain, result.price);
+                });
+            }
+            
+            resultsGrid.appendChild(card);
+        });
+    }
+    
+    // Function to add domain to cart
+    function addToCart(domain, price) {
+        // This would integrate with the existing cart functionality
+        console.log('Adding to cart:', domain, price);
+        // You can integrate this with the existing cart system
+    }
+    
+    // Debounce function for search
+    let searchTimeout;
+    function debounceSearch(query) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            searchDomains(query);
+        }, 500);
+    }
+    
+    // Event listeners
     if (domainInput && searchButton) {
         searchButton.addEventListener('click', function() {
-            const domain = domainInput.value.trim();
-            if (domain) {
-                // Simulate domain search
-                console.log('Searching for domain:', domain);
-                // In a real implementation, this would make an API call
+            const query = domainInput.value.trim();
+            if (query) {
+                searchDomains(query);
             }
         });
         
         domainInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                searchButton.click();
+                e.preventDefault();
+                const query = domainInput.value.trim();
+                if (query) {
+                    searchDomains(query);
+                }
+            }
+        });
+        
+        // Real-time search as user types
+        domainInput.addEventListener('input', function(e) {
+            const query = e.target.value.trim();
+            const mainContent = document.querySelector('.main-content');
+            if (query.length > 0) {
+                debounceSearch(query);
+            } else {
+                searchResultsSection.style.display = 'none';
+                if (mainContent) {
+                    mainContent.classList.remove('has-results');
+                }
             }
         });
     }

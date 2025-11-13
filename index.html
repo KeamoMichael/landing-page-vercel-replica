@@ -63,8 +63,8 @@
         <div class="domain-search-section">
             <div class="search-container">
                 <div class="search-box">
-                    <input type="text" class="domain-input" placeholder="Search for a domain..." autocomplete="off">
-                    <button class="search-button">
+                    <input type="text" class="domain-input" id="domain-input" placeholder="Search for a domain..." autocomplete="off">
+                    <button class="search-button" id="search-button">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M19 19L14.65 14.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -74,44 +74,13 @@
             </div>
         </div>
 
-        <div class="products-section">
-            <div class="products-container">
-                <h2 class="products-title">Available Domains</h2>
-                <div class="products-grid" id="products-grid">
-                    <!-- Products will be dynamically added here -->
+        <div class="search-results-section" id="search-results-section" style="display: none;">
+            <div class="results-container">
+                <div class="results-header">
+                    <h2 class="results-title">Available Domains</h2>
                 </div>
-            </div>
-        </div>
-
-        <div class="features-section">
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Fast</h3>
-                    <p class="feature-description">Get your domain up and running in seconds with instant DNS propagation.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">At-cost</h3>
-                    <p class="feature-description">No markup, no hidden fees. Pay exactly what registrars charge.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="feature-title">Private</h3>
-                    <p class="feature-description">Free WHOIS privacy protection included with every domain.</p>
+                <div class="results-grid" id="results-grid">
+                    <!-- Domain results will be dynamically added here -->
                 </div>
             </div>
         </div>
