@@ -221,7 +221,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }, Math.max(currentChars.length, newChars.length) * 30 + 400);
         }
         
-        // Initialize with first text
+        // Initialize with first text - replace any existing text
+        // Clear the initial HTML text and start with first option
+        rotatingText.textContent = '';
         initializeText(textOptions[0]);
         
         // Start rotation after initial display
