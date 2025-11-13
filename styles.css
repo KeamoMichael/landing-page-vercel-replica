@@ -227,6 +227,10 @@ body[data-theme="dark"] .nav-logo svg {
     transform: translateY(0) !important;
 }
 
+.title-line-flip[data-text="startup"] .char {
+    letter-spacing: 0.01em;
+}
+
 .title-line-flip .char.blur-out {
     filter: blur(8px);
     opacity: 0;

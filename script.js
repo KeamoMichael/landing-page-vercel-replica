@@ -81,7 +81,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (rotatingText) {
         const textOptions = [
             'your new identity.',
-            'your startup.'
+            'your startup.',
+            'your passion project.',
+            'your ai agent.'
         ];
         
         let currentIndex = 0;
@@ -151,6 +153,12 @@ document.addEventListener('DOMContentLoaded', function() {
             chars.forEach(char => {
                 rotatingText.appendChild(char);
             });
+            // Set data attribute for specific text styling
+            if (text === 'your startup.') {
+                rotatingText.setAttribute('data-text', 'startup');
+            } else {
+                rotatingText.removeAttribute('data-text');
+            }
             // Set a fixed height based on the content to prevent layout shifts
             const height = rotatingText.offsetHeight;
             if (height > 0) {
@@ -179,6 +187,13 @@ document.addEventListener('DOMContentLoaded', function() {
             currentIndex = (currentIndex + 1) % textOptions.length;
             const newText = textOptions[currentIndex];
             const newChars = wrapCharacters(newText);
+            
+            // Set data attribute for specific text styling
+            if (newText === 'your startup.') {
+                rotatingText.setAttribute('data-text', 'startup');
+            } else {
+                rotatingText.removeAttribute('data-text');
+            }
             
             // Create wrapper for new text and position it absolutely
             const newTextWrapper = document.createElement('span');
