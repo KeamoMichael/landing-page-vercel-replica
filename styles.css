@@ -905,6 +905,18 @@ body[data-theme="dark"] .nav-logo svg {
     .nav-container {
         padding: 0 16px;
     }
+    
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    
+    .cart-toggle {
+        display: flex;
+        padding: 6px;
+    }
 
     .domain-search-section {
         padding: 0 16px 24px;
