@@ -405,6 +405,9 @@ body[data-theme="dark"] .nav-logo svg {
     color: var(--black);
     background: transparent;
     font-family: 'Inter', sans-serif;
+    pointer-events: auto;
+    z-index: 2;
+    position: relative;
 }
 
 .domain-input::placeholder {
