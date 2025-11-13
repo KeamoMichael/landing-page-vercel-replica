@@ -155,12 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (searchResultsSection) {
             searchResultsSection.classList.remove('active');
         }
-        if (domainInput) {
-            domainInput.value = '';
-        }
-        if (heroDomainInput) {
-            heroDomainInput.value = '';
-        }
+        // Don't clear input values - let user keep their text
     }
     
     // Function to create domain card
@@ -223,9 +218,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to search domains
     function searchDomains(query) {
         const topResultsGrid = document.getElementById('top-results-grid');
-        if (!searchResultsSection || !resultsGrid || !topResultsGrid) {
-            console.error('Search results elements not found');
+        if (!searchResultsSection || !resultsGrid) {
+            console.error('Search results elements not found:', {
+                searchResultsSection: !!searchResultsSection,
+                resultsGrid: !!resultsGrid
+            });
             return;
+        }
+        
+        // topResultsGrid is optional - if it doesn't exist, we'll skip top results
+        if (!topResultsGrid) {
+            console.warn('Top results grid not found, skipping top results section');
         }
         
         if (!query || query.trim() === '') {
@@ -245,7 +248,9 @@ document.addEventListener('DOMContentLoaded', function() {
         enterSearchMode();
         
         // Clear results
-        topResultsGrid.innerHTML = '';
+        if (topResultsGrid) {
+            topResultsGrid.innerHTML = '';
+        }
         resultsGrid.innerHTML = '';
         
         // Search for each TLD
@@ -273,17 +278,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Render top results
-        topResults.forEach(result => {
-            const card = createDomainCard(result);
-            topResultsGrid.appendChild(card);
-        });
+        // Render top results (if topResultsGrid exists)
+        if (topResultsGrid) {
+            topResults.forEach(result => {
+                const card = createDomainCard(result);
+                topResultsGrid.appendChild(card);
+            });
+        } else {
+            // If no top results grid, add top results to main grid
+            topResults.forEach(result => {
+                const card = createDomainCard(result);
+                resultsGrid.appendChild(card);
+            });
+        }
         
         // Render all other results
         otherResults.forEach(result => {
             const card = createDomainCard(result);
             resultsGrid.appendChild(card);
         });
+        
+        // Ensure results section is visible
+        if (searchResultsSection) {
+            searchResultsSection.classList.add('active');
+            searchResultsSection.style.display = 'block';
+        }
     }
     
     // Function to add domain to cart
@@ -338,7 +357,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (query.length > 0) {
             debounceSearch(query);
         } else {
-            exitSearchMode();
+            // Only exit search mode if input is truly empty and user isn't actively typing
+            // Use a small delay to avoid clearing while user is deleting
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (inputElement.value.trim() === '') {
+                    exitSearchMode();
+                }
+            }, 1000);
         }
     }
     
