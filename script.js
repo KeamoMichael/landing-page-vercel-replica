@@ -62,6 +62,31 @@ document.addEventListener('DOMContentLoaded', function() {
         return !unavailableDomains.includes(fullDomain.toLowerCase());
     }
     
+    // Function to enter search mode
+    function enterSearchMode() {
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            mainContent.classList.add('search-mode');
+        }
+        if (searchResultsSection) {
+            searchResultsSection.classList.add('active');
+        }
+    }
+    
+    // Function to exit search mode
+    function exitSearchMode() {
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) {
+            mainContent.classList.remove('search-mode');
+        }
+        if (searchResultsSection) {
+            searchResultsSection.classList.remove('active');
+        }
+        if (domainInput) {
+            domainInput.value = '';
+        }
+    }
+    
     // Function to search domains
     function searchDomains(query) {
         if (!searchResultsSection || !resultsGrid) {
@@ -69,12 +94,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        const mainContent = document.querySelector('.main-content');
         if (!query || query.trim() === '') {
-            searchResultsSection.style.display = 'none';
-            if (mainContent) {
-                mainContent.classList.remove('has-results');
-            }
+            exitSearchMode();
             return;
         }
         
@@ -82,25 +103,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const cleanQuery = query.replace(/\.(com|co|io|net|org|dev|app|xyz|tech|ai|me|tv|online|store|shop)$/i, '').trim();
         
         if (cleanQuery === '') {
-            searchResultsSection.style.display = 'none';
+            exitSearchMode();
             return;
         }
         
-        // Show results section
-        searchResultsSection.style.display = 'block';
+        // Enter search mode
+        enterSearchMode();
+        
+        // Clear and populate results
         resultsGrid.innerHTML = '';
-        
-        // Add class to main content to adjust layout
-        if (mainContent) {
-            mainContent.classList.add('has-results');
-        }
-        
-        // Scroll to results
-        setTimeout(() => {
-            if (searchResultsSection) {
-                searchResultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }, 100);
         
         // Search for each TLD
         const results = [];
@@ -241,15 +252,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Real-time search as user types
         domainInput.addEventListener('input', function(e) {
             const query = e.target.value.trim();
-            const mainContent = document.querySelector('.main-content');
             if (query.length > 0) {
                 debounceSearch(query);
             } else {
-                if (searchResultsSection) {
-                    searchResultsSection.style.display = 'none';
-                }
-                if (mainContent) {
-                    mainContent.classList.remove('has-results');
+                exitSearchMode();
+            }
+        });
+        
+        // ESC key to exit search mode
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && searchResultsSection && searchResultsSection.classList.contains('active')) {
+                exitSearchMode();
+                if (domainInput) {
+                    domainInput.blur();
                 }
             }
         });
