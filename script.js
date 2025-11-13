@@ -27,9 +27,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Domain search functionality
     const domainInput = document.getElementById('domain-input');
+    const heroDomainInput = document.getElementById('hero-domain-input');
     const searchButton = document.getElementById('search-button');
+    const heroSearchButton = document.getElementById('hero-search-button');
     const searchResultsSection = document.getElementById('search-results-section');
     const resultsGrid = document.getElementById('results-grid');
+    
+    // Use the active input (navbar or hero)
+    function getActiveInput() {
+        return domainInput && domainInput.offsetParent !== null ? domainInput : heroDomainInput;
+    }
+    
+    // Sync input values between hero and navbar search
+    function syncInputs() {
+        if (domainInput && heroDomainInput) {
+            const activeInput = getActiveInput();
+            const inactiveInput = activeInput === domainInput ? heroDomainInput : domainInput;
+            inactiveInput.value = activeInput.value;
+        }
+    }
     
     // Common TLDs to search
     const commonTLDs = ['.com', '.co', '.io', '.net', '.org', '.dev', '.app', '.xyz', '.tech', '.ai', '.me', '.tv', '.online', '.store', '.shop'];
@@ -75,6 +91,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (searchResultsSection) {
             searchResultsSection.classList.add('active');
         }
+        // Sync input value to navbar search
+        if (heroDomainInput && domainInput) {
+            domainInput.value = heroDomainInput.value;
+            domainInput.focus();
+        }
     }
     
     // Function to exit search mode
@@ -92,6 +113,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (domainInput) {
             domainInput.value = '';
+        }
+        if (heroDomainInput) {
+            heroDomainInput.value = '';
         }
     }
     
