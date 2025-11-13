@@ -936,8 +936,16 @@ body[data-theme="dark"] .add-domain-btn {
 }
 
 body[data-theme="dark"] .add-domain-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: var(--white) !important;
+    border-color: var(--gray-400);
+}
+
+body[data-theme="dark"] .add-domain-btn:hover .cart-icon {
+    color: var(--black) !important;
+}
+
+body[data-theme="dark"] .add-domain-btn:hover .add-text {
+    color: var(--black) !important;
 }
 
 body[data-theme="dark"] .add-domain-btn .plus-icon {
