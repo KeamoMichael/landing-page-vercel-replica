@@ -248,5 +248,228 @@ document.addEventListener('DOMContentLoaded', function() {
             setInterval(rotateText, 3500); // Rotate every 3.5 seconds
         }, 2500);
     }
+    
+    // Shopping Cart Functionality
+    const products = [
+        {
+            id: 1,
+            name: 'example.com',
+            price: 12.99,
+            description: 'Premium domain with instant DNS setup and privacy protection included.'
+        },
+        {
+            id: 2,
+            name: 'techstart.io',
+            price: 24.99,
+            description: 'Perfect for tech startups. Includes email forwarding and SSL certificate.'
+        },
+        {
+            id: 3,
+            name: 'mybrand.app',
+            price: 19.99,
+            description: 'Modern app domain with free WHOIS privacy and DNS management.'
+        },
+        {
+            id: 4,
+            name: 'creativestudio.design',
+            price: 29.99,
+            description: 'Creative domain for design agencies. Includes custom email and hosting setup.'
+        },
+        {
+            id: 5,
+            name: 'shop.store',
+            price: 34.99,
+            description: 'E-commerce ready domain with payment gateway integration support.'
+        },
+        {
+            id: 6,
+            name: 'blog.space',
+            price: 15.99,
+            description: 'Perfect for bloggers and content creators. Fast and reliable hosting.'
+        }
+    ];
+    
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Cart UI Elements
+    const cartToggle = document.getElementById('cart-toggle');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const cartClose = document.getElementById('cart-close');
+    const cartItems = document.getElementById('cart-items');
+    const cartCount = document.getElementById('cart-count');
+    const cartTotal = document.getElementById('cart-total');
+    const checkoutButton = document.getElementById('checkout-button');
+    const productsGrid = document.getElementById('products-grid');
+    
+    // Initialize products
+    function renderProducts() {
+        if (!productsGrid) return;
+        
+        productsGrid.innerHTML = '';
+        products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+                <h3 class="product-name">${product.name}</h3>
+                <div class="product-price">$${product.price.toFixed(2)}/year</div>
+                <p class="product-description">${product.description}</p>
+                <button class="add-to-cart-btn" data-product-id="${product.id}">Add to Cart</button>
+            `;
+            productsGrid.appendChild(productCard);
+        });
+        
+        // Add event listeners to add to cart buttons
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-product-id'));
+                addToCart(productId);
+            });
+        });
+    }
+    
+    // Add to cart
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+        
+        const existingItem = cart.find(item => item.id === productId);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: 1
+            });
+        }
+        
+        saveCart();
+        updateCartUI();
+        
+        // Show feedback
+        const btn = document.querySelector(`[data-product-id="${productId}"]`);
+        const originalText = btn.textContent;
+        btn.textContent = 'Added!';
+        btn.disabled = true;
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }, 1000);
+    }
+    
+    // Remove from cart
+    function removeFromCart(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        saveCart();
+        updateCartUI();
+    }
+    
+    // Save cart to localStorage
+    function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    
+    // Update cart UI
+    function updateCartUI() {
+        // Update cart count
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        if (cartCount) {
+            cartCount.textContent = totalItems;
+            cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+        }
+        
+        // Update cart items
+        if (cartItems) {
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="empty-cart">
+                        <p class="empty-cart-text">Your cart is empty</p>
+                    </div>
+                `;
+            } else {
+                cartItems.innerHTML = '';
+                cart.forEach(item => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">$${item.price.toFixed(2)} × ${item.quantity}</div>
+                        </div>
+                        <button class="cart-item-remove" data-product-id="${item.id}" aria-label="Remove item">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+                
+                // Add remove event listeners
+                document.querySelectorAll('.cart-item-remove').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const productId = parseInt(this.getAttribute('data-product-id'));
+                        removeFromCart(productId);
+                    });
+                });
+            }
+        }
+        
+        // Update total
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        if (cartTotal) {
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+        }
+        
+        // Update checkout button
+        if (checkoutButton) {
+            checkoutButton.disabled = cart.length === 0;
+        }
+    }
+    
+    // Open cart
+    function openCart() {
+        if (cartSidebar) cartSidebar.classList.add('open');
+        if (cartOverlay) cartOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // Close cart
+    function closeCart() {
+        if (cartSidebar) cartSidebar.classList.remove('open');
+        if (cartOverlay) cartOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    // Event listeners
+    if (cartToggle) {
+        cartToggle.addEventListener('click', openCart);
+    }
+    
+    if (cartClose) {
+        cartClose.addEventListener('click', closeCart);
+    }
+    
+    if (cartOverlay) {
+        cartOverlay.addEventListener('click', closeCart);
+    }
+    
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function() {
+            if (cart.length > 0) {
+                alert(`Thank you! Your order total is $${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}. This is a demo - no actual payment will be processed.`);
+                cart = [];
+                saveCart();
+                updateCartUI();
+                closeCart();
+            }
+        });
+    }
+    
+    // Initialize
+    renderProducts();
+    updateCartUI();
 });
 

@@ -28,7 +28,15 @@
                 <a href="#" class="nav-link">Contact</a>
                 <a href="#" class="nav-link">Legal</a>
             </div>
-            <div class="nav-theme-toggle">
+            <div class="nav-actions">
+                <button class="cart-toggle" id="cart-toggle" aria-label="Shopping cart">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 7H15L14 13H6L5 7Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M7 17C7.55228 17 8 16.5523 8 16C8 15.4477 7.55228 15 7 15C6.44772 15 6 15.4477 6 16C6 16.5523 6.44772 17 7 17Z" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M13 17C13.5523 17 14 16.5523 14 16C14 15.4477 13.5523 15 13 15C12.4477 15 12 15.4477 12 16C12 16.5523 12.4477 17 13 17Z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
                 <button class="theme-toggle" aria-label="Toggle theme">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/>
@@ -66,6 +74,15 @@
             </div>
         </div>
 
+        <div class="products-section">
+            <div class="products-container">
+                <h2 class="products-title">Available Domains</h2>
+                <div class="products-grid" id="products-grid">
+                    <!-- Products will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
         <div class="features-section">
             <div class="features-grid">
                 <div class="feature-card">
@@ -98,6 +115,29 @@
                 </div>
             </div>
         </div>
+
+        <!-- Cart Sidebar -->
+        <div class="cart-sidebar" id="cart-sidebar">
+            <div class="cart-header">
+                <h2 class="cart-title">Shopping Cart</h2>
+                <button class="cart-close" id="cart-close" aria-label="Close cart">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="cart-items" id="cart-items">
+                <!-- Cart items will be dynamically added here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span class="total-label">Total:</span>
+                    <span class="total-amount" id="cart-total">$0.00</span>
+                </div>
+                <button class="checkout-button" id="checkout-button">Checkout</button>
+            </div>
+        </div>
+        <div class="cart-overlay" id="cart-overlay"></div>
 
         <div class="gradient-background"></div>
     </main>
