@@ -262,8 +262,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     }
     
-    // Event listeners
-    if (domainInput && searchButton && searchResultsSection && resultsGrid) {
+    // Function to handle search input
+    function handleSearchInput(inputElement) {
+        const query = inputElement.value.trim();
+        if (query.length > 0) {
+            debounceSearch(query);
+        } else {
+            exitSearchMode();
+        }
+    }
+    
+    // Event listeners for navbar search
+    if (domainInput && searchButton) {
         searchButton.addEventListener('click', function() {
             const query = domainInput.value.trim();
             if (query) {
@@ -281,29 +291,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // Real-time search as user types
         domainInput.addEventListener('input', function(e) {
-            const query = e.target.value.trim();
-            if (query.length > 0) {
-                debounceSearch(query);
-            } else {
-                exitSearchMode();
+            handleSearchInput(e.target);
+        });
+    }
+    
+    // Event listeners for hero search
+    if (heroDomainInput && heroSearchButton) {
+        heroSearchButton.addEventListener('click', function() {
+            const query = heroDomainInput.value.trim();
+            if (query) {
+                searchDomains(query);
             }
         });
         
-        // ESC key to exit search mode
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && searchResultsSection && searchResultsSection.classList.contains('active')) {
-                exitSearchMode();
-                if (domainInput) {
-                    domainInput.blur();
+        heroDomainInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = heroDomainInput.value.trim();
+                if (query) {
+                    searchDomains(query);
                 }
             }
         });
-    } else {
-        console.error('Domain search elements not found:', {
-            domainInput: !!domainInput,
-            searchButton: !!searchButton,
+        
+        heroDomainInput.addEventListener('input', function(e) {
+            handleSearchInput(e.target);
+        });
+    }
+    
+    // ESC key to exit search mode
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && searchResultsSection && searchResultsSection.classList.contains('active')) {
+            exitSearchMode();
+            const activeInput = getActiveInput();
+            if (activeInput) {
+                activeInput.blur();
+            }
+        }
+    });
+    
+    if (!searchResultsSection || !resultsGrid) {
+        console.error('Search results elements not found:', {
             searchResultsSection: !!searchResultsSection,
             resultsGrid: !!resultsGrid
         });
