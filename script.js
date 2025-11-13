@@ -151,6 +151,11 @@ document.addEventListener('DOMContentLoaded', function() {
             chars.forEach(char => {
                 rotatingText.appendChild(char);
             });
+            // Set a fixed height based on the content to prevent layout shifts
+            const height = rotatingText.offsetHeight;
+            if (height > 0) {
+                rotatingText.style.minHeight = height + 'px';
+            }
             // Blur in initial text with a small delay to ensure DOM is ready
             setTimeout(() => {
                 blurInChars(chars);
@@ -163,6 +168,12 @@ document.addEventListener('DOMContentLoaded', function() {
             isAnimating = true;
             
             const currentChars = Array.from(rotatingText.querySelectorAll('.char'));
+            
+            // Preserve current height to prevent layout shifts
+            const currentHeight = rotatingText.offsetHeight;
+            if (currentHeight > 0) {
+                rotatingText.style.minHeight = currentHeight + 'px';
+            }
             
             // Get new text immediately
             currentIndex = (currentIndex + 1) % textOptions.length;
@@ -207,12 +218,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 // Move characters out of wrapper and remove wrapper
-                newChars.forEach(char => {
-                    rotatingText.appendChild(char);
+                // Use requestAnimationFrame to ensure smooth transition
+                requestAnimationFrame(() => {
+                    newChars.forEach(char => {
+                        rotatingText.appendChild(char);
+                    });
+                    if (newTextWrapper.parentNode) {
+                        newTextWrapper.parentNode.removeChild(newTextWrapper);
+                    }
+                    
+                    // Update min-height based on new content to prevent future shifts
+                    const newHeight = rotatingText.offsetHeight;
+                    if (newHeight > 0) {
+                        rotatingText.style.minHeight = newHeight + 'px';
+                    }
                 });
-                if (newTextWrapper.parentNode) {
-                    newTextWrapper.parentNode.removeChild(newTextWrapper);
-                }
                 
                 isAnimating = false;
             }, Math.max(currentChars.length, newChars.length) * 30 + 400);

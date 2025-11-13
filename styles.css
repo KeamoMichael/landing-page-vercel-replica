@@ -162,6 +162,8 @@ body[data-theme="dark"] .nav-logo svg {
     min-height: 1.2em;
     text-align: center;
     width: 100%;
+    overflow: visible;
+    vertical-align: top;
 }
 
 .title-line-flip .text-wrapper {
@@ -171,6 +173,7 @@ body[data-theme="dark"] .nav-logo svg {
     transform: translateX(-50%);
     white-space: nowrap;
     line-height: inherit;
+    pointer-events: none;
 }
 
 .title-line-flip .char {
