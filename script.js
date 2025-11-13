@@ -119,18 +119,54 @@ document.addEventListener('DOMContentLoaded', function() {
         results.forEach(result => {
             const card = document.createElement('div');
             card.className = `domain-result-card ${result.available ? 'available' : 'unavailable'}`;
-            card.innerHTML = `
-                <div>
-                    <span class="domain-name">${result.domain}</span>
-                    ${!result.available ? '<span class="domain-status">Unavailable</span>' : ''}
-                </div>
-                <div class="domain-price">${result.available ? `$${result.price.toFixed(2)}/year` : '—'}</div>
-            `;
             
             if (result.available) {
-                card.addEventListener('click', function() {
-                    addToCart(result.domain, result.price);
-                });
+                card.innerHTML = `
+                    <div class="domain-info">
+                        <span class="domain-name">${result.domain}</span>
+                    </div>
+                    <div class="domain-actions">
+                        <div class="domain-price">$${result.price.toFixed(2)}/year</div>
+                        <button class="add-domain-btn" data-domain="${result.domain}" data-price="${result.price}">
+                            <svg class="cart-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 4H12L11 10H5L4 4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M6 13C6.55228 13 7 12.5523 7 12C7 11.4477 6.55228 11 6 11C5.44772 11 5 11.4477 5 12C5 12.5523 5.44772 13 6 13Z" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M10 13C10.5523 13 11 12.5523 11 12C11 11.4477 10.5523 11 10 11C9.44772 11 9 11.4477 9 12C9 12.5523 9.44772 13 10 13Z" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                            <svg class="plus-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 2V10M2 6H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                            <span class="add-text">Add</span>
+                        </button>
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <div class="domain-info">
+                        <span class="domain-name">${result.domain}</span>
+                        <span class="domain-status">Unavailable</span>
+                    </div>
+                    <div class="domain-price">—</div>
+                `;
+            }
+            
+            // Add click handler for add button
+            if (result.available) {
+                const addBtn = card.querySelector('.add-domain-btn');
+                if (addBtn) {
+                    addBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const domain = this.getAttribute('data-domain');
+                        const price = parseFloat(this.getAttribute('data-price'));
+                        addDomainToCart(domain, price);
+                        
+                        // Visual feedback
+                        this.classList.add('added');
+                        setTimeout(() => {
+                            this.classList.remove('added');
+                        }, 1000);
+                    });
+                }
             }
             
             resultsGrid.appendChild(card);
@@ -138,10 +174,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Function to add domain to cart
-    function addToCart(domain, price) {
-        // This would integrate with the existing cart functionality
-        console.log('Adding to cart:', domain, price);
-        // You can integrate this with the existing cart system
+    function addDomainToCart(domain, price) {
+        // Access the cart from the outer scope or get from localStorage
+        // The cart variable is defined later in the code, so we'll work with localStorage directly
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        // Check if domain already exists in cart (by name)
+        const existingItem = cart.find(item => item.name === domain);
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            // Generate a unique ID for the domain
+            const domainId = Date.now(); // Simple ID generation
+            cart.push({
+                id: domainId,
+                name: domain,
+                price: price,
+                quantity: 1
+            });
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Update cart UI - trigger a custom event that the cart system can listen to
+        const cartUpdateEvent = new CustomEvent('cartUpdated');
+        document.dispatchEvent(cartUpdateEvent);
+        
+        // Also directly update cart count if element exists
+        const cartCount = document.getElementById('cart-count');
+        if (cartCount) {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+        }
     }
     
     // Debounce function for search
@@ -442,6 +508,13 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
     
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Listen for cart updates from domain search
+    document.addEventListener('cartUpdated', function() {
+        // Reload cart from localStorage to sync
+        cart = JSON.parse(localStorage.getItem('cart')) || [];
+        updateCartUI();
+    });
     
     // Cart UI Elements
     const cartToggle = document.getElementById('cart-toggle');
