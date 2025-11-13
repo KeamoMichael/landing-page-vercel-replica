@@ -465,7 +465,7 @@ body[data-theme="dark"] .nav-logo svg {
     opacity: 1;
     width: 16px;
     height: 16px;
-    color: var(--black);
+    color: var(--white);
 }
 
 .add-domain-btn .add-text {
@@ -486,6 +486,7 @@ body[data-theme="dark"] .nav-logo svg {
     background: var(--white);
     border-radius: 2px;
     padding: 1px;
+    color: var(--black);
 }
 
 .add-domain-btn .add-text {
@@ -933,6 +934,10 @@ body[data-theme="dark"] .domain-status {
 body[data-theme="dark"] .add-domain-btn {
     border-color: rgba(255, 255, 255, 0.2);
     color: #ffffff;
+}
+
+body[data-theme="dark"] .add-domain-btn .cart-icon {
+    color: var(--white);
 }
 
 body[data-theme="dark"] .add-domain-btn:hover {
