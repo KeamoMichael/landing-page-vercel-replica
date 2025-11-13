@@ -64,6 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Function to search domains
     function searchDomains(query) {
+        if (!searchResultsSection || !resultsGrid) {
+            console.error('Search results elements not found');
+            return;
+        }
+        
         const mainContent = document.querySelector('.main-content');
         if (!query || query.trim() === '') {
             searchResultsSection.style.display = 'none';
@@ -86,14 +91,15 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsGrid.innerHTML = '';
         
         // Add class to main content to adjust layout
-        const mainContent = document.querySelector('.main-content');
         if (mainContent) {
             mainContent.classList.add('has-results');
         }
         
         // Scroll to results
         setTimeout(() => {
-            searchResultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            if (searchResultsSection) {
+                searchResultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }, 100);
         
         // Search for each TLD
@@ -148,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Event listeners
-    if (domainInput && searchButton) {
+    if (domainInput && searchButton && searchResultsSection && resultsGrid) {
         searchButton.addEventListener('click', function() {
             const query = domainInput.value.trim();
             if (query) {
@@ -173,11 +179,20 @@ document.addEventListener('DOMContentLoaded', function() {
             if (query.length > 0) {
                 debounceSearch(query);
             } else {
-                searchResultsSection.style.display = 'none';
+                if (searchResultsSection) {
+                    searchResultsSection.style.display = 'none';
+                }
                 if (mainContent) {
                     mainContent.classList.remove('has-results');
                 }
             }
+        });
+    } else {
+        console.error('Domain search elements not found:', {
+            domainInput: !!domainInput,
+            searchButton: !!searchButton,
+            searchResultsSection: !!searchResultsSection,
+            resultsGrid: !!resultsGrid
         });
     }
     

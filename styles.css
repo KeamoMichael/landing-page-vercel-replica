@@ -200,7 +200,7 @@ body[data-theme="dark"] .nav-logo svg {
 
 .title-line-flip {
     display: inline-block;
-    color: var(--gray-600);
+    color: var(--gray-700);
     position: relative;
     min-height: 1.2em;
     text-align: center;
