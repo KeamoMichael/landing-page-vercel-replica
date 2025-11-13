@@ -1,0 +1,14 @@
+{
+  "name": "landing-page-vercel-replica",
+  "version": "1.0.0",
+  "description": "Vercel domains page replica with shopping cart",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step required'"
+  },
+  "dependencies": {
+    "stripe": "^14.0.0"
+  },
+  "devDependencies": {}
+}
+

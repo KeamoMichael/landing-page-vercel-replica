@@ -457,13 +457,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (checkoutButton) {
-        checkoutButton.addEventListener('click', function() {
-            if (cart.length > 0) {
-                alert(`Thank you! Your order total is $${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}. This is a demo - no actual payment will be processed.`);
-                cart = [];
-                saveCart();
-                updateCartUI();
-                closeCart();
+        checkoutButton.addEventListener('click', async function() {
+            if (cart.length === 0) return;
+            
+            // Disable button during processing
+            this.disabled = true;
+            this.textContent = 'Processing...';
+            
+            try {
+                // Call your API endpoint to create Stripe Checkout session
+                const response = await fetch('/api/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        items: cart
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.url) {
+                    // Redirect to Stripe Checkout
+                    window.location.href = data.url;
+                } else if (data.error) {
+                    alert('Error: ' + data.error);
+                    this.disabled = false;
+                    this.textContent = 'Checkout';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                this.disabled = false;
+                this.textContent = 'Checkout';
             }
         });
     }
