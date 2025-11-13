@@ -501,8 +501,8 @@ body[data-theme="dark"] .nav-logo svg {
 }
 
 .add-domain-btn:hover {
-    background: var(--white) !important;
-    border-color: var(--gray-400);
+    background: var(--black) !important;
+    border-color: var(--black);
     min-width: 80px;
     width: auto;
     padding: 8px 12px;
@@ -512,7 +512,7 @@ body[data-theme="dark"] .nav-logo svg {
     left: 12px;
     transform: translateY(-50%);
     opacity: 1;
-    color: var(--black) !important;
+    color: var(--white) !important;
 }
 
 .add-domain-btn:hover .plus-icon {
@@ -524,7 +524,7 @@ body[data-theme="dark"] .nav-logo svg {
     opacity: 1;
     width: auto;
     margin-left: 8px;
-    color: var(--black) !important;
+    color: var(--white) !important;
 }
 
 .add-domain-btn:active {
