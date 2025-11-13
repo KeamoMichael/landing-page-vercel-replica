@@ -81,10 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (rotatingText) {
         const textOptions = [
             'your new identity.',
-            'the next viral idea.',
-            'your startup.',
-            'your passion project.',
-            'your ai agent.'
+            'your startup.'
         ];
         
         let currentIndex = 0;
