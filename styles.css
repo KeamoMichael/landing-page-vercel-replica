@@ -796,29 +796,29 @@ body[data-theme="dark"] .subtitle-text {
     color: rgba(255, 255, 255, 0.6);
 }
 
-body[data-theme="dark"] .search-box {
+body[data-theme="dark"] .nav-search .search-box {
     background: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.1);
 }
 
-body[data-theme="dark"] .search-box:focus-within {
+body[data-theme="dark"] .nav-search .search-box:focus-within {
     border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
 }
 
-body[data-theme="dark"] .domain-input {
+body[data-theme="dark"] .nav-search .domain-input {
     color: #ffffff;
 }
 
-body[data-theme="dark"] .domain-input::placeholder {
+body[data-theme="dark"] .nav-search .domain-input::placeholder {
     color: rgba(255, 255, 255, 0.4);
 }
 
-body[data-theme="dark"] .search-button {
+body[data-theme="dark"] .nav-search .search-button {
     color: rgba(255, 255, 255, 0.4);
 }
 
-body[data-theme="dark"] .search-button:hover {
+body[data-theme="dark"] .nav-search .search-button:hover {
     color: #ffffff;
 }
 
