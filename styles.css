@@ -883,6 +883,17 @@ body[data-theme="dark"] .nav-logo svg {
     .nav-links {
         display: none;
     }
+    
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+    
+    .cart-toggle {
+        display: flex;
+    }
 
     .cart-sidebar {
         width: 100%;
