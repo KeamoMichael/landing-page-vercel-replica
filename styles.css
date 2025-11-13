@@ -317,12 +317,17 @@ body[data-theme="dark"] .nav-logo svg {
 
 /* Search Results Section */
 .search-results-section {
-    padding: 40px 24px 80px;
+    padding: 0;
     position: relative;
     z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
+    min-height: calc(100vh - 64px);
     animation: fadeInUp 0.5s ease-out;
+    display: none;
+}
+
+.search-results-section.active {
+    display: block;
 }
 
 .results-container {
