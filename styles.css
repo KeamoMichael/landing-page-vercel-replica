@@ -219,7 +219,7 @@ body[data-theme="dark"] .nav-logo svg {
                 opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
                 transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     vertical-align: baseline;
-    letter-spacing: 0.005em;
+    letter-spacing: 0.002em;
 }
 
 .title-line-flip .char.blur-in {
